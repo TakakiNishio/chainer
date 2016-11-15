@@ -80,6 +80,7 @@ if __name__ == "__main__":
             theta = np.linspace(0, 2 * np.pi, N_test)
             sin = np.sin(theta)
             test = model.get_predata(theta)
+            plt.figure(epoch)
             plt.plot(theta, sin, label = "sin")
             plt.plot(theta, test, label = "test")
             plt.legend()
@@ -89,7 +90,7 @@ if __name__ == "__main__":
             plt.title("sin")
             plt.xlabel("theta")
             plt.ylabel("amp")
-           # plt.savefig("fig/fig_sin_epoch{}.png".format(epoch))
+            #plt.savefig("fig/fig_sin_epoch{}.png".format(epoch))
             #plt.clf()
 
     print "end"
@@ -97,6 +98,7 @@ if __name__ == "__main__":
     interval = int(time.time() - start_time)
     print "runtime: {}sec".format(interval)
 
+    plt.figure(1)
     plt.plot(train_losses, label = "train_loss")
     plt.plot(test_losses, label = "test_loss")
     plt.yscale('log')
@@ -106,5 +108,5 @@ if __name__ == "__main__":
     plt.xlabel("epoch")
     plt.ylabel("loss")
     #plt.savefig("fig/fig_loss.png")
-   #plt.clf()
+    #plt.clf()
     plt.show()
