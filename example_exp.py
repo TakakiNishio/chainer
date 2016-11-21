@@ -39,7 +39,7 @@ class MyChain(Chain):
 
 #visualize loss reduction
 def loss_visualizer(los_data):
-    plt.figure(0)
+    plt.figure(1)
     plt.plot(los_data)
     plt.xlim(0,1000)
     plt.ylim(1e-04,10)
@@ -51,12 +51,13 @@ def loss_visualizer(los_data):
 
 #visualize regression result
 def result_visualizer(x,y):
-    plt.figure(1)
-    plt.plot(x,np.exp(x),"b",label = "acrual data")
-    plt.plot(x, y, "g")
+    plt.figure(2)
+    plt.plot(x,np.exp(x),"b",label = "actual data")
+    plt.plot(x, y,"g",label = 'estimated data')
     plt.xlim(0,1)
     plt.ylim(1,3)
     plt.title("regression result")
+    plt.legend()
     plt.xlabel("x")
     plt.ylabel("y")
 
@@ -70,7 +71,7 @@ if __name__ == '__main__':
 
     losses = []
 
-    epoch = 2000
+    epoch = 5000
 
     for i in range(epoch):
 
