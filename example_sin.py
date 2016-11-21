@@ -76,7 +76,7 @@ if __name__ == "__main__":
         if epoch % 10 == 0:
             print "epoch: {}/{} train loss: {} test loss: {}".format(epoch, n_epoch, average_loss, loss.data)
 
-        if epoch in [10, 500]:
+        if epoch in [1, 500]:
             theta = np.linspace(0, 2 * np.pi, N_test)
             sin = np.sin(theta)
             test = model.get_predata(theta)
@@ -98,7 +98,7 @@ if __name__ == "__main__":
     interval = int(time.time() - start_time)
     print "runtime: {}sec".format(interval)
 
-    plt.figure(1)
+    plt.figure(2)
     plt.plot(train_losses, label = "train_loss")
     plt.plot(test_losses, label = "test_loss")
     plt.yscale('log')

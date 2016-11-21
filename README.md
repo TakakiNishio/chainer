@@ -1,9 +1,12 @@
 # chainer
 chainer scripts
 
-example1.py : define variables & calcurate backforward
-example2.py : linear regression
-example3.py : learning sin curve (NN)
+example_0.py : define variables & calcurate backforward  
+example_1.py : vector calcuration 1  
+example_2.py : vactor calcuration 2  
+example_linear.py : linear regression  
 
-tutorial_1.py : same as example_1.py
-tutorial_2.py : same as example_2.py
+example_sin.py : learning sin curve (NN)  
+
+tutorial_0.py : same as example_0.py  
+tutorial_1.py : same as example_linear.py  
