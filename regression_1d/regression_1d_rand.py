@@ -15,6 +15,7 @@ def real_function(x):
     #return np.exp(x)
     #return -x**2
     return np.sin(2*x)
+    #return 2 * x + 1
 
 
 #generate dataset
@@ -24,6 +25,7 @@ def dataset_generator(n):
     max_x = np.pi
     min_x = -np.pi
     error_range = 0.05
+
     x = []
     y = []
     for i in range(n):
@@ -32,6 +34,7 @@ def dataset_generator(n):
         y.append(real_function(x[i]) + random.uniform(-error_range,error_range))
     x = np.array(x)
     y = np.array(y)
+
     return x,y
 
 
@@ -77,7 +80,7 @@ def loss_visualizer(train_loss_data,test_loss_data):
 def result_visualizer(actual_x,actual_y,test_x,test_y):
     plt.figure(2)
     plt.plot(actual_x,actual_y,"ro",label = "actual data")
-    plt.plot(test_x, test_y,"bo",label = 'estimated data')
+    plt.plot(test_x, test_y,"bo",label = "estimated data")
     #pli.xlim(-1,1)
     #plt.ylim(-1,1)
     plt.title("regression result")
