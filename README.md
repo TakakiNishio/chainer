@@ -12,4 +12,6 @@ example_exp.py : leaining exp curve (NN)
 tutorial_0.py : same as example_0.py  
 tutorial_1.py : same as example_linear.py  
 
-regression_1d.py : 1-D x-y regression
+regression_1d.py : 1-D x-y regression  
+regression_1d_prototype.py : 1-D x-y regression  
+regression_1d_mln.py : x-y regression with 4 layers network
