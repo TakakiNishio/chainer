@@ -12,16 +12,22 @@ import random
 
 #define function
 def real_function(x):
-    return np.exp(x)
+    #return np.exp(x)
+    return -x**2
+    #return np.sin(x)
 
 
 #generating dataset
 def dataset_generator(n):
+    max_x = 1
+    min_x = -1
+    #max_x = np.pi
+    #min_x = -np.pi
     error_range = 0.05
     x = []
     y = []
     for i in range(n):
-        x.append(np.random.random())
+        x.append(random.uniform(min_x,max_x))
         #y.append(real_function(x[i]))
         y.append(real_function(x[i]) + random.uniform(-error_range,error_range))
     x = np.array(x)
@@ -64,12 +70,10 @@ def loss_visualizer(los_data):
 
 
 #visualize regression result
-def result_visualizer(x,y):
+def result_visualizer(actual_x,actual_y,test_x,test_y):
     plt.figure(2)
-    plt.plot(x,np.exp(x),"b",label = "actual data")
-    plt.plot(x, y,"g",label = 'estimated data')
-    plt.xlim(0,1)
-    plt.ylim(1,3)
+    plt.plot(actual_x,actual_y,"bo",label = "actual data")
+    plt.plot(test_x, test_y,"go",label = 'estimated data')
     plt.title("regression result")
     plt.legend()
     plt.xlabel("x")
@@ -79,17 +83,14 @@ def result_visualizer(x,y):
 #main
 if __name__ == '__main__':
 
-    dataset = dataset_generator(500)
+    data_n = 1000
+    train_n = 500
+    epoch_n = 2000
+    batchsize = 10
 
-    plt.figure(2)
-    plt.plot(dataset[0],dataset[1],"bo",label = "dataset")
-    #plt.xlim(0,1)
-    #plt.ylim(1,3)
-    #plt.title("exp")
-    #plt.xlabel("x")
-    #plt.ylabel("y")
-    #plt.legend()
-    #print dataset[0]
+    dataset = dataset_generator(data_n)
+    x_data = dataset[0]
+    y_data = dataset[1]
 
     model = MyChain()
     optimizer = optimizers.Adam()  #choose optimizer
@@ -97,31 +98,31 @@ if __name__ == '__main__':
 
     losses = []
 
-    epoch = 2000
-
-    for i in range(epoch):
+    for epoch in range(epoch_n):
 
         #generate dataset
-        x,y = dataset_generator(100)
+        j = random.randint(0,train_n-batchsize-1)
+        train_x = x_data[j:j+batchsize]
+        train_y = y_data[j:j+batchsize]
 
         #set variables
-        x_ = Variable(x.astype(np.float32).reshape(100,1))
-        t_ = Variable(y.astype(np.float32).reshape(100,1))
+        train_x_ = Variable(train_x.astype(np.float32).reshape(len(train_x),1))
+        train_y_ = Variable(train_y.astype(np.float32).reshape(len(train_y),1))
 
         #learning processes
         model.zerograds()   #reset grads
-        loss = model(x_,t_) #calculate LOSS
-        loss.backward()     #back prop
+        loss = model(train_x_,train_y_) #calculate LOSS
+        loss.backward()     #back propagation
         optimizer.update()  #renew each weights
 
-        print "epoch: " + str(i) + " LOSS: " + str(loss.data)
+        print "epoch: " + str(epoch) + " LOSS: " + str(loss.data)
         losses.append(loss.data)
 
     loss_visualizer(losses)
 
-    x_test = np.linspace(0,1,100) #range: 0-1, amount: 100
-    y_test = model.get(x_test)
+    test_x = x_data[train_n-1:data_n-1]
+    test_y = model.get(test_x)
 
-    result_visualizer(x_test,y_test)
+    result_visualizer(x_data,y_data,test_x,test_y)
 
     plt.show()
