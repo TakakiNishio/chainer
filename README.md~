@@ -1,5 +1,5 @@
 # chainer
-chainer scripts  
+scripts
 ```bash
 example_0.py : define variables & calcurate backforward  
 example_1.py : vector calcuration 1  
@@ -12,7 +12,7 @@ example_exp.py : leaining exp curve (NN)
 tutorial_0.py : same as example_0.py  
 tutorial_1.py : same as example_linear.py  
 ```
-under regression_1d  
+regression_1d
 ```bash
 regression_1d_c.py : 1-D x-y regression (continuous x)  
 regression_1d_c_mln.py : 1-D x-y regression (continuous x) with 4 layers network (continuous)  
