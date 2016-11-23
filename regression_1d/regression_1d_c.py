@@ -28,7 +28,7 @@ def dataset_generator(n):
 
     x = []
     y = []
-    for i in range(n):
+    for i in range(n+1):
         x.append(min_x + ((max_x-min_x)/n)*i)
         y.append(real_function(x[i]))
         #y.append(real_function(x[i]) + random.uniform(-error_range,error_range))

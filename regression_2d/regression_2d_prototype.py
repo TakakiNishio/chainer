@@ -28,7 +28,7 @@ def dataset_generator(n):
 
     x = []
     y = []
-    for i in range(n+1):
+    for i in range(n):
         x.append(min_x + ((max_x-min_x)/n)*i)
         y.append(real_function(x[i]))
         #y.append(real_function(x[i]) + random.uniform(-error_range,error_range))
@@ -39,9 +39,9 @@ def dataset_generator(n):
 
 
 #define NN class
-class MyChain1(Chain):
+class MyChain(Chain):
     def __init__(self):
-        super(MyChain1, self).__init__(
+        super(MyChain, self).__init__(
             l1 = L.Linear(1,16),
             l2 = L.Linear(16,32),
             l3 = L.Linear(32,1),
@@ -60,32 +60,6 @@ class MyChain1(Chain):
 
     def get(self,x): #confirm tearning result
         return self.predict(Variable(np.array([x]).astype(np.float32).reshape(len(x),1))).data
-
-
-class MyChain2(Chain):
-    def __init__(self):
-        super(MyChain2, self).__init__(
-            l1 = L.Linear(1,16),
-            l2 = L.Linear(16,32),
-            l3 = L.Linear(32,48),
-            l4 = L.Linear(48,1)
-        )
-
-    def __call__(self, x,y): #calculate error
-        x_ = Variable(x.astype(np.float32).reshape(len(x),1))
-        y_ = Variable(y.astype(np.float32).reshape(len(y),1))
-        return F.mean_squared_error(self.predict(x_),y_)
-
-    def predict(self, x): #calculate network output
-        h1 = F.leaky_relu(self.l1(x))
-        h2 = F.leaky_relu(self.l2(h1))
-        h3 = F.leaky_relu(self.l3(h2))
-        h4 = F.leaky_relu(self.l4(h3))
-        return h4
-
-    def get(self,x): #confirm tearning result
-        return self.predict(Variable(np.array([x]).astype(np.float32).reshape(len(x),1))).data
-
 
 
 #visualize loss reduction
@@ -135,8 +109,7 @@ if __name__ == '__main__':
     train_x, train_y = dataset_generator(train_n)
     test_x, test_y = dataset_generator(test_n)
 
-    #model = MyChain1()
-    model = MyChain2()
+    model = MyChain()
     optimizer = optimizers.Adam()  #choose optimizer
     optimizer.setup(model)
 
