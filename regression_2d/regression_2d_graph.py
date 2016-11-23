@@ -12,11 +12,9 @@ import chainer.links as L
 
 
 #define function
-def real_function(x):
-    x1 = x[0]
-    x2 = x[1]
-    z = -3*np.exp(-(((x1-2)**2)/3)-(((x2-2)**2)/3)) - 4*np.exp(-(((x1+2)**2)/4)-(((x2 +2)**2)/4))
-    #z = np.exp(-0.25 * np.sqrt(x1**2 + x2**2)) * np.cos(2 * np.sqrt(x1**2 + x2**2))
+def real_function(x1,x2):
+    #z = -3*np.exp(-(((x1-2)**2)/3)-(((x2-2)**2)/3)) - 4*np.exp(-(((x1+2)**2)/4)-(((x2 +2)**2)/4))
+    z = np.exp(-0.25 * np.sqrt(x1**2 + x2**2)) * np.cos(2 * np.sqrt(x1**2 + x2**2))
     return z
 
 
@@ -38,8 +36,8 @@ def dataset_generator(n):
         x1 = random.uniform(min_x1,max_x1)
         x2 = random.uniform(min_x2,max_x2)
         x.append([x1,x2])
-        y.append(real_function(x[i]))
-        #y.append(real_function(x[i])+random.uniform(-error_range,error_range))
+        y.append(real_function(x1,x2))
+        #y.append(real_function(x1,x2)+random.uniform(-error_range,error_range))
     x = np.array(x)
     y = np.array(y)
 
@@ -115,6 +113,33 @@ def result_visualizer(actual_x,actual_y,test_x,estimated_y):
     ax.set_zlabel("z")
 
 
+
+#draw 3D graph
+def function_visualizer():
+    fig3 = plt.figure(3)
+    ax1 = Axes3D(fig3)
+
+    x1_mesh = np.arange(-5,5,0.25)
+    x2_mesh = np.arange(-5,5,0.25)
+
+    X_mesh = []
+
+    for i in range (len(x1_mesh)):
+        X_mesh.append([x1_mesh[i],x2_mesh[i]])
+    X_mesh = np.array(X_mesh)
+
+    X1,X2 = np.meshgrid(x1_mesh,x2_mesh)
+    actual_Z = real_function(X1,X2)
+    w1 = ax1.plot_wireframe(X1,X2,actual_Z,color=(0,0,1.0),label='actual function')
+    plt.legend()
+
+    fig4 = plt.figure(4)
+    ax2 = Axes3D(fig4)
+    estimated_Z = model.get(X_mesh)
+    w2 = ax2.plot_wireframe(X1,X2,estimated_Z,color=(1.0,0,0),label='estimated function')
+    plt.legend()
+
+
 #main
 if __name__ == '__main__':
 
@@ -170,4 +195,5 @@ if __name__ == '__main__':
     estimated_y = model.get(test_x)
     loss_visualizer(train_losses,test_losses)
     result_visualizer(test_x,test_y,test_x,estimated_y)
+    function_visualizer()
     plt.show()

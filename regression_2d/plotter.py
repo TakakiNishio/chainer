@@ -46,6 +46,14 @@ def dataset_generator(n):
     return x,y,z
 
 
+def real_function2(x):
+    x1 = x[0]
+    x2 = x[1]
+    z = -3*np.exp(-(((x1-2)**2)/3)-(((x2-2)**2)/3)) - 4*np.exp(-(((x1+2)**2)/4)-(((x2 +2)**2)/4))
+    #z = np.exp(-0.25 * np.sqrt(x1**2 + x2**2)) * np.cos(2 * np.sqrt(x1**2 + x2**2))
+    return z
+
+
 #draw 3-D graph
 def visualizer(x,y,z):
 
@@ -68,6 +76,21 @@ def visualizer(x,y,z):
     ax.set_zlabel("z")
 
 
+#draw 3D graph
+def function_visualizer():
+    fig2 = plt.figure(2)
+    ax2 = Axes3D(fig2)
+    x1_mesh = np.arange(-5,5,0.25)
+    x2_mesh = np.arange(-5,5,0.25)
+    X1,X2 = np.meshgrid(x1_mesh,x2_mesh)
+    X = []
+    for i in range(0,len(x1_mesh)):
+        X.append([x1_mesh[i], x2_mesh[i]])
+    #X = np.array(X)
+    Z = real_function(X1,X2)
+    #w = ax2.plot_wireframe(X1,X2,Z,color=(0,0,1.0),label='actual')
+    print X1
+
 #main
 if __name__ == '__main__':
 
@@ -77,4 +100,13 @@ if __name__ == '__main__':
 
     visualizer(x,y,z)
 
+    function_visualizer()
+
     plt.show()
+    x1_mesh = np.arange(-5,5,0.25)
+    x2_mesh = np.arange(-5,5,0.25)
+    X_mesh = []
+    for i in range (len(x1_mesh)):
+        X_mesh.append([x1_mesh[i],x2_mesh[i]])
+    X_mesh = np.array(X_mesh)
+    #print X_mesh
