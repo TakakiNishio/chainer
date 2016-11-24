@@ -14,10 +14,16 @@ tutorial_1.py : same as example_linear.py
 ```
 regression_1d
 ```bash
-regression_1d_c.py : 1-D x-y regression (continuous x)  
-regression_1d_c_mln.py : 1-D x-y regression (continuous x) with 4 layers network (continuous)  
-regression_1d_c_2chain.py : 1-D x-y regression with 2 Chain classes  
-regression_1d_rand_prototype.py : 1-D x-y regression  
+regression_1d_rand_prototype.py : x-y regression prototype  
 regression_1d_rand.py : x-y regression (random x)  
-regression_1d_rand_mln.py : x-y regression (random x) with 4 layers network
+regression_1d_rand_mln.py : x-y regression (random x) with 4 layers network  
+regression_1d_c.py : x-y regression (continuous x)  
+regression_1d_c_mln.py : x-y regression (continuous x) with 4 layers network (continuous)  
+regression_1d_c_2chain.py : x-y regression with 2 Chain classes
+```
+
+regression_2d
+```bash
+regression_2d_prototype.py : (x1,x2)-y regression prototype  
+regression_2d.py : (x1,x2)-y regression  
 ```

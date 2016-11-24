@@ -12,18 +12,18 @@ import chainer.links as L
 
 #define function
 def real_function(x):
-    #return np.exp(x)
+    return np.exp(x)
     #return -x**2
-    return np.sin(2*x)
+    #return np.sin(2*x)
     #return 2 * x + 1
 
 
 #generate dataset
 def dataset_generator(n):
-    #max_x = 1
-    #min_x = -1
-    max_x = np.pi
-    min_x = -np.pi
+    max_x = 1.0
+    min_x = -1.0
+    #max_x = np.pi
+    #min_x = -np.pi
     error_range = 0.05
 
     x = []

@@ -92,8 +92,8 @@ def result_visualizer(actual_x,actual_y,test_x,test_y):
 #main
 if __name__ == '__main__':
 
-    data_n = 500
-    train_n = 400
+    data_n = 300
+    train_n = 200
 
     epoch_n = 300
     batchsize = 10
@@ -144,7 +144,7 @@ if __name__ == '__main__':
     print "execution time : " + str(execution_time)
 
     #visualize results
-    test_y = model.get(test_x)
+    estimated_y = model.get(test_x)
     loss_visualizer(train_losses,test_losses)
-    result_visualizer(dataset[0],dataset[1],test_x,test_y)
+    result_visualizer(test_x,test_y,test_x,estimated_y)
     plt.show()

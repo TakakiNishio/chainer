@@ -110,9 +110,9 @@ def result_visualizer(actual_x,actual_y,test_x,estimated_y):
 
     plt.title("regression result")
     plt.legend()
-    ax.set_xlabel("x")
-    ax.set_ylabel("y")
-    ax.set_zlabel("z")
+    ax.set_xlabel("x1")
+    ax.set_ylabel("x2")
+    ax.set_zlabel("y")
 
 
 #main

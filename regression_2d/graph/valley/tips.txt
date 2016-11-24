@@ -1,0 +1,47 @@
+
+function:
+z = -3*np.exp(-(((x1-2)**2)/3)-(((x2-2)**2)/3)) 
+- 4*p.exp(-(((x1+2)**2)/4)-(((x2 +2)**2)/4))
+
+min_x1 = -5, max_x1 = 5
+min_x2 = -5, max_x2 = 5
+
+parameters:
+train_n = 1000
+test_n = 500
+epoch_n = 300
+batchsize = 10
+
+LOSS result:
+train LOSS = 0.000870754861098
+test LOSS = 0.000655554467812
+
+execution time : 58.6500589848 (DELL inspiron13)
+
+
+Network:
+class MyChain(Chain):
+    def __init__(self):
+        super(MyChain, self).__init__(
+            l1 = L.Linear(2,16),
+            l2 = L.Linear(16,32),
+            l3 = L.Linear(32,48),
+            l4 = L.Linear(48,1)
+        )
+
+    def __call__(self, x,y): #calculate error
+        x_ = Variable(x.astype(np.float32).reshape(len(x),2))
+        y_ = Variable(y.astype(np.float32).reshape(len(y),1))
+        return F.mean_squared_error(self.predict(x_),y_)
+
+    def predict(self, x): #calculate network output
+        h1 = F.leaky_relu(self.l1(x))
+        h2 = F.leaky_relu(self.l2(h1))
+        h3 = F.leaky_relu(self.l3(h2))
+        h4 = F.leaky_relu(self.l4(h3))
+        return h4
+
+    def get(self,x): #confirm tearning result
+        x__ = Variable(np.array([x]).astype(np.float32).reshape(len(x),2))
+        return self.predict(x__).data
+

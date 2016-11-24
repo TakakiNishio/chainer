@@ -4,6 +4,8 @@ from mpl_toolkits.mplot3d import Axes3D
 import random
 import time
 
+import sys
+
 """
 import chainer
 from chainer import cuda, Function, gradient_check, Variable, optimizers, utils
@@ -66,6 +68,7 @@ def visualizer(x,y,z):
     X,Y = np.meshgrid(x_mesh,y_mesh)
     Z = real_function(X,Y)
     w = ax.plot_wireframe(X,Y,Z,color=(0,0,1.0),label='actual')
+    #print Z
     #"""
     #plt.xlim(-1,1)
     #plt.ylim(-1,1)
@@ -78,18 +81,38 @@ def visualizer(x,y,z):
 
 #draw 3D graph
 def function_visualizer():
-    fig2 = plt.figure(2)
-    ax2 = Axes3D(fig2)
+
     x1_mesh = np.arange(-5,5,0.25)
     x2_mesh = np.arange(-5,5,0.25)
+
     X1,X2 = np.meshgrid(x1_mesh,x2_mesh)
-    X = []
+    X_mesh =[]
+
+    actual_Z = real_function(X1,X2)
+    estimated_Z = []
+
     for i in range(0,len(x1_mesh)):
-        X.append([x1_mesh[i], x2_mesh[i]])
-    #X = np.array(X)
-    Z = real_function(X1,X2)
-    #w = ax2.plot_wireframe(X1,X2,Z,color=(0,0,1.0),label='actual')
-    print X1
+        for j in range(0,len(x2_mesh)):
+            X_mesh.append([x1_mesh[i],x2_mesh[j]])
+
+    X_mesh = np.array(X_mesh)
+    print X_mesh[0]
+
+    for k in range(0,len(X_mesh)):
+        estimated_Z.append(real_function2(X_mesh[k]))
+
+    estimated_Z = np.array(estimated_Z).reshape((len(x1_mesh),len(x2_mesh)))
+
+    fig3 = plt.figure(3)
+    ax1 = Axes3D(fig3)
+    w1 = ax1.plot_wireframe(X1,X2,actual_Z,color=(0,0,1.0),label='actual function')
+    plt.legend()
+
+    fig4 = plt.figure(4)
+    ax2 = Axes3D(fig4)
+    w2 = ax2.plot_wireframe(X1,X2,estimated_Z,color=(1.0,0,0),label='estimated function')
+    plt.legend()
+
 
 #main
 if __name__ == '__main__':
@@ -103,10 +126,3 @@ if __name__ == '__main__':
     function_visualizer()
 
     plt.show()
-    x1_mesh = np.arange(-5,5,0.25)
-    x2_mesh = np.arange(-5,5,0.25)
-    X_mesh = []
-    for i in range (len(x1_mesh)):
-        X_mesh.append([x1_mesh[i],x2_mesh[i]])
-    X_mesh = np.array(X_mesh)
-    #print X_mesh

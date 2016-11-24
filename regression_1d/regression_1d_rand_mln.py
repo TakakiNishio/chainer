@@ -91,8 +91,8 @@ def result_visualizer(actual_x,actual_y,test_x,test_y):
 #main
 if __name__ == '__main__':
 
-    data_n = 500
-    train_n = 400
+    data_n = 300
+    train_n = 200
 
     epoch_n = 300
     batchsize = 10
