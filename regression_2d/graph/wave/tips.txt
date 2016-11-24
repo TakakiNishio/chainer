@@ -24,6 +24,11 @@ LOSS result:
 　　test LOSS = 0.00642704451457
   execution time = 46.6128280163
 
+　Lab PC with trainer
+　　train LOSS = 0.00639225
+　　test LOSS = 0.00653502
+  execution time = 54.2127020359
+
 
 Network:
 class MyChain(Chain):
