@@ -4,15 +4,12 @@ from mpl_toolkits.mplot3d import Axes3D
 import random
 import time
 
-import os
-import json
-import pickle
-
 import chainer
 from chainer import cuda, Function, gradient_check, Variable, optimizers,serializers,utils
 from chainer import Link, Chain, ChainList
 import chainer.functions as F
 import chainer.links as L
+
 from chainer.functions.loss.mean_squared_error import mean_squared_error
 
 import chainer.datasets.tuple_dataset as td
@@ -51,9 +48,7 @@ def dataset_generator(n):
     x = np.array(x, dtype = np.float32)
     y = np.array(y, dtype = np.float32)
 
-    x = np.reshape(x,(len(x),2))
-    y = np.reshape(y,(len(y),1))
-
+    #dataset = np.array(dataset,dtype=np.float32)
     return x,y
 
 
@@ -67,6 +62,11 @@ class MyChain(Chain):
             l4 = L.Linear(48,1)
         )
 
+    # def __call__(self, x,y): #calculate error
+    #     x_ = Variable(x.astype(np.float32).reshape(len(x),2))
+    #     y_ = Variable(y.astype(np.float32).reshape(len(y),1))
+    #     return F.mean_squared_error(self.predict(x_),y_)
+
     def __call__(self, x): #calculate network output
         h1 = F.leaky_relu(self.l1(x))
         h2 = F.leaky_relu(self.l2(h1))
@@ -74,33 +74,16 @@ class MyChain(Chain):
         h4 = F.leaky_relu(self.l4(h3))
         return h4
 
+    # def get(self,x): #confirm tearning result
+    #     x__ = Variable(np.array([x]).astype(np.float32).reshape(len(x),2))
+    #     return self.predict(x__).data
+
 
 #visualize loss reduction
-def loss_visualizer():
-
-    epoch = []
-    train_loss = []
-    test_loss = []
-
-    f = open('./result/log', 'r')
-    data = json.load(f)
-    f.close()
-
-    # print data
-    # print type(data)
-    # print len(data)
-
-    value = []
-
-    for i in range(0,len(data)):
-        value = data[i]
-        epoch.append(value["epoch"])
-        test_loss.append(value["main/loss"])
-        train_loss.append(value["validation/main/loss"])
-
+def loss_visualizer(train_loss_data,test_loss_data):
     plt.figure(1)
-    plt.plot(epoch,train_loss,"b",label = "train LOSS")
-    plt.plot(epoch,test_loss,"g",label = "test LOSS")
+    plt.plot(train_loss_data,"b",label = "train LOSS")
+    plt.plot(test_loss_data,"g",label = "test LOSS")
     #pli.xlim(0,1000)
     #plt.ylim(1e-04,1)
     plt.yscale('log')
@@ -153,8 +136,9 @@ def function_visualizer():
         for j in range(0,len(x2_mesh)):
             X_mesh.append([x1_mesh[i],x2_mesh[j]])
 
-    X_mesh = np.array(X_mesh,dtype = np.float32)
-    estimated_Z = np.array((model.predictor(X_mesh).data).reshape((len(x1_mesh),len(x2_mesh))))
+    X_mesh = np.array(X_mesh)
+    estimated_Z = np.array(model.get(X_mesh)).reshape((len(x1_mesh),len(x2_mesh)))
+
     fig3 = plt.figure(figsize = plt.figaspect(0.5))
     ax1 = fig3.add_subplot(1, 2, 1, projection='3d')
     #ax1 = Axes3D(fig3)
@@ -180,7 +164,7 @@ if __name__ == '__main__':
     train_n = 1000
     test_n = 500
 
-    epoch_n = 300
+    epoch_n = 50
     batchsize = 10
 
     train_x, train_y = dataset_generator(train_n)
@@ -191,7 +175,15 @@ if __name__ == '__main__':
     optimizer = optimizers.Adam()  #choose optimizer
     optimizer.setup(model)
 
+    train_losses = []
+    test_losses = []
+
     start_time = time.time()
+
+    train_x = np.reshape(train_x,(len(train_x),2))
+    test_x = np.reshape(test_x,(len(test_x),2))
+    train_y = np.reshape(train_y,(len(train_y),1))
+    test_y = np.reshape(test_y,(len(test_y),1))
 
     train = td.TupleDataset(train_x,train_y)
     test = td.TupleDataset(test_x,test_y)
@@ -202,7 +194,7 @@ if __name__ == '__main__':
     updater = training.StandardUpdater(train_iter, optimizer, device=-1)
     trainer = training.Trainer(updater, (epoch_n, 'epoch'), out="result")
     trainer.extend(extensions.Evaluator(test_iter, model, device=-1))
-    #trainer.extend(extensions.snapshot())
+    trainer.extend(extensions.snapshot())
     trainer.extend(extensions.LogReport())
     trainer.extend(extensions.PrintReport( ['epoch', 'main/loss', 'validation/main/loss']))
     trainer.extend(extensions.ProgressBar())
@@ -212,8 +204,8 @@ if __name__ == '__main__':
     print "execution time : " + str(execution_time)
 
     #visualize results
-    loss_visualizer()
+    #loss_visualizer(train_losses,test_losses)
     estimated_y = model.predictor(test_x).data
     test_result_visualizer(test_x,test_y,test_x,estimated_y)
-    function_visualizer()
+    #function_visualizer()
     plt.show()

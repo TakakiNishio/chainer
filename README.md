@@ -21,9 +21,11 @@ regression_1d_c.py : x-y regression (continuous x)
 regression_1d_c_mln.py : x-y regression (continuous x) with 4 layers network (continuous)  
 regression_1d_c_2chain.py : x-y regression with 2 Chain classes
 ```
-
 regression_2d
 ```bash
+plotter.py : 3D figure drawing  
 regression_2d_prototype.py : (x1,x2)-y regression prototype  
 regression_2d.py : (x1,x2)-y regression  
+regression_2d_trainer_prototype.py : (x1,x2)-y regression with trainer prototype  
+regression_2d_trainer.py : (x1,x2)-y regression with trainer  
 ```

@@ -24,6 +24,11 @@ LOSS result:
 　　train LOSS = 0.00198156081635
 　　test LOSS = 0.00994021911174
   execution time = 46.5766551495
+ 
+ Lab PC with trainer
+ 　train LOSS = 0.00114497
+　　test LOSS = 0.00201924
+  execution time = 52.4951498508
 
 
 Network:
