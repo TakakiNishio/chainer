@@ -5,10 +5,16 @@ import random
 import time
 
 import chainer
-from chainer import cuda, Function, gradient_check, Variable, optimizers, utils
+from chainer import cuda, Function, gradient_check, Variable, optimizers,serializers,utils
 from chainer import Link, Chain, ChainList
 import chainer.functions as F
 import chainer.links as L
+
+from chainer.functions.loss.mean_squared_error import mean_squared_error
+
+import chainer.datasets.tuple_dataset as td
+from chainer import training
+from chainer.training import extensions
 
 
 #define function
@@ -38,9 +44,11 @@ def dataset_generator(n):
         x.append([x1,x2])
         y.append(real_function(x1,x2))
         #y.append(real_function(x1,x2)+random.uniform(-error_range,error_range))
-    x = np.array(x)
-    y = np.array(y)
 
+    x = np.array(x, dtype = np.float32)
+    y = np.array(y, dtype = np.float32)
+
+    #dataset = np.array(dataset,dtype=np.float32)
     return x,y
 
 
@@ -54,21 +62,21 @@ class MyChain(Chain):
             l4 = L.Linear(48,1)
         )
 
-    def __call__(self, x,y): #calculate error
-        x_ = Variable(x.astype(np.float32).reshape(len(x),2))
-        y_ = Variable(y.astype(np.float32).reshape(len(y),1))
-        return F.mean_squared_error(self.predict(x_),y_)
+    # def __call__(self, x,y): #calculate error
+    #     x_ = Variable(x.astype(np.float32).reshape(len(x),2))
+    #     y_ = Variable(y.astype(np.float32).reshape(len(y),1))
+    #     return F.mean_squared_error(self.predict(x_),y_)
 
-    def predict(self, x): #calculate network output
+    def __call__(self, x): #calculate network output
         h1 = F.leaky_relu(self.l1(x))
         h2 = F.leaky_relu(self.l2(h1))
         h3 = F.leaky_relu(self.l3(h2))
         h4 = F.leaky_relu(self.l4(h3))
         return h4
 
-    def get(self,x): #confirm tearning result
-        x__ = Variable(np.array([x]).astype(np.float32).reshape(len(x),2))
-        return self.predict(x__).data
+    # def get(self,x): #confirm tearning result
+    #     x__ = Variable(np.array([x]).astype(np.float32).reshape(len(x),2))
+    #     return self.predict(x__).data
 
 
 #visualize loss reduction
@@ -111,7 +119,6 @@ def test_result_visualizer(actual_x,actual_y,test_x,estimated_y):
     ax.set_xlabel("x1")
     ax.set_ylabel("x2")
     ax.set_zlabel("y")
-
 
 
 #draw 3D graph
@@ -163,15 +170,47 @@ if __name__ == '__main__':
     train_x, train_y = dataset_generator(train_n)
     test_x, test_y = dataset_generator(test_n)
 
-    model = MyChain()
+    model = L.Classifier(MyChain(),lossfun=mean_squared_error)
     optimizer = optimizers.Adam()  #choose optimizer
     optimizer.setup(model)
+
+    #print train.shape
 
     train_losses = []
     test_losses = []
 
     start_time = time.time()
 
+    train_x = np.reshape(train_x,(len(train_x),2))
+    test_x = np.reshape(test_x,(len(test_x),2))
+    train_y = np.reshape(train_y,(len(train_y),1))
+    test_y = np.reshape(test_y,(len(test_y),1))
+
+    print test_x.shape
+
+    train = []
+    test = []
+    for i in range(train_n):
+        train.append([train_x[i],train_y[i]])
+
+    for j in range(test_n):
+        test.append([test_x[j],test_y[j]])
+
+    #train = td.TupleDataset(train_x,train_y)
+    #test = td.TupleDataset(test_x,test_y)
+
+    train_iter = chainer.iterators.SerialIterator(train, 10)
+    test_iter = chainer.iterators.SerialIterator(test,10,repeat=False, shuffle=False)
+
+    updater = training.StandardUpdater(train_iter, optimizer, device=-1, loss_func = mean_squared_error)
+    trainer = training.Trainer(updater, (5, 'epoch'), out="result")
+    trainer.extend(extensions.Evaluator(test_iter, model,device=-1))
+    trainer.extend(extensions.LogReport())
+    trainer.extend(extensions.PrintReport(['epoch', 'main/loss', 'validation/main/loss','main/accuracy', 'validation/main/accuracy']))
+    trainer.extend(extensions.ProgressBar())
+    trainer.run()
+
+    """
     #learning
     for epoch in range(1,epoch_n+1):
 
@@ -198,13 +237,14 @@ if __name__ == '__main__':
 
         if epoch % 10 == 0:
             print "epoch: " + str(epoch) + "  train LOSS: " + str(average_loss) + "  test LOSS: " + str(test_loss.data)
+    """
 
     execution_time = time.time() - start_time
     print "execution time : " + str(execution_time)
 
     #visualize results
-    estimated_y = model.get(test_x)
-    loss_visualizer(train_losses,test_losses)
-    test_result_visualizer(test_x,test_y,test_x,estimated_y)
+    #estimated_y = model.get(test_x)
+    #loss_visualizer(train_losses,test_losses)
+    #test_result_visualizer(test_x,test_y,test_x,estimated_y)
     function_visualizer()
     plt.show()

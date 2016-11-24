@@ -13,10 +13,16 @@ epoch_n = 300
 batchsize = 10
 
 LOSS result:
-train LOSS = 0.00494688552688
-test LOSS = 0.00593277346343
 
-execution time : 60.8407940865 (DELL inspiron13)
+　DELL inspiron13
+  train LOSS = 0.00494688552688
+  test LOSS = 0.00593277346343
+  execution time : 60.8407940865
+
+　Lab PC
+　　train LOSS = 0.00795608226908
+　　test LOSS = 0.00642704451457
+  execution time = 46.6128280163
 
 
 Network:
