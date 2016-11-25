@@ -22,8 +22,8 @@ from chainer.training import extensions
 
 #define function
 def real_function(x1,x2):
-    #z = -3*np.exp(-(((x1-2)**2)/3)-(((x2-2)**2)/3)) - 4*np.exp(-(((x1+2)**2)/4)-(((x2 +2)**2)/4))
-    z = np.exp(-0.25 * np.sqrt(x1**2 + x2**2)) * np.cos(2 * np.sqrt(x1**2 + x2**2))
+    z = -3*np.exp(-(((x1-2)**2)/3)-(((x2-2)**2)/3)) - 4*np.exp(-(((x1+2)**2)/4)-(((x2 +2)**2)/4))
+    #z = np.exp(-0.25 * np.sqrt(x1**2 + x2**2)) * np.cos(2 * np.sqrt(x1**2 + x2**2))
     return z
 
 
@@ -177,10 +177,10 @@ def function_visualizer():
 #main
 if __name__ == '__main__':
 
-    train_n = 1000
-    test_n = 500
+    train_n = 10000
+    test_n = 1000
 
-    epoch_n = 300
+    epoch_n = 1000
     batchsize = 10
 
     train_x, train_y = dataset_generator(train_n)

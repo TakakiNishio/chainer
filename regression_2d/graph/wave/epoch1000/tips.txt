@@ -1,0 +1,39 @@
+
+function:
+z = np.exp(-0.25 * np.sqrt(x1**2 + x2**2)) 
+    * np.cos(2 * np.sqrt(x1**2 + x2**2))
+
+min_x1 = -5, max_x1 = 5
+min_x2 = -5, max_x2 = 5
+
+parameters:
+train_n = 10000
+test_n = 1000
+epoch_n = 1000
+batchsize = 10
+
+LOSS result:
+
+　Lab PC with trainer
+　　train LOSS = 0.000325772
+　　test LOSS = 0.000159765
+  execution time = 1392.97310305 (23 min 13 sec)
+
+
+Network(for trainer):
+class MyChain(Chain):
+    def __init__(self):
+        super(MyChain, self).__init__(
+            l1 = L.Linear(2,16),
+            l2 = L.Linear(16,32),
+            l3 = L.Linear(32,48),
+            l4 = L.Linear(48,1)
+        )
+
+    def __call__(self, x): #calculate network output
+        h1 = F.leaky_relu(self.l1(x))
+        h2 = F.leaky_relu(self.l2(h1))
+        h3 = F.leaky_relu(self.l3(h2))
+        h4 = F.leaky_relu(self.l4(h3))
+        return h4
+
