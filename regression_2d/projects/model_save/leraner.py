@@ -25,7 +25,7 @@ if __name__ == '__main__':
     #set parameters
     train_n = 5000
     test_n = 1000
-    epoch_n = 50
+    epoch_n = 300
     batchsize = 10
 
     #get dataset

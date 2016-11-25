@@ -4,8 +4,8 @@ import random
 
 #define function
 def real_function(x1,x2):
-    #z = -3*np.exp(-(((x1-2)**2)/3)-(((x2-2)**2)/3)) - 4*np.exp(-(((x1+2)**2)/4)-(((x2 +2)**2)/4))
-    z = np.exp(-0.25 * np.sqrt(x1**2 + x2**2)) * np.cos(2 * np.sqrt(x1**2 + x2**2))
+    z = -3*np.exp(-(((x1-2)**2)/3)-(((x2-2)**2)/3)) - 4*np.exp(-(((x1+2)**2)/4)-(((x2 +2)**2)/4))
+    #z = np.exp(-0.25 * np.sqrt(x1**2 + x2**2)) * np.cos(2 * np.sqrt(x1**2 + x2**2))
     return z
 
 
@@ -28,8 +28,8 @@ def dataset_generator(n):
         x1 = random.uniform(min_x1,max_x1)
         x2 = random.uniform(min_x2,max_x2)
         x.append([x1,x2])
-        #y.append(real_function(x1,x2))
-        y.append(real_function(x1,x2) + random.uniform(-noise_range,noise_range)) #add noise
+        y.append(real_function(x1,x2))
+        #y.append(real_function(x1,x2) + random.uniform(-noise_range,noise_range)) #add noise
 
     x = np.array(x, dtype = np.float32)
     y = np.array(y, dtype = np.float32)
