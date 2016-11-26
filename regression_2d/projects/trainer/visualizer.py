@@ -23,8 +23,8 @@ def loss_visualizer():
     for i in range(0,len(data)):
         value = data[i]
         epoch.append(value["epoch"])
-        test_loss.append(value["main/loss"])
-        train_loss.append(value["validation/main/loss"])
+        train_loss.append(value["main/loss"])
+        test_loss.append(value["validation/main/loss"])
 
     plt.figure(1)
     plt.plot(epoch,train_loss,"b",label = "train LOSS")
