@@ -23,14 +23,16 @@ import visualizer as v
 if __name__ == '__main__':
 
     #set parameters
-    train_n = 5000
-    test_n = 1000
-    epoch_n = 300
+    train_n = 1000
+    test_n = 500
+    epoch_n = 50
     batchsize = 10
 
     #get dataset
     train_x, train_y = d.dataset_generator(train_n)
     test_x, test_y = d.dataset_generator(test_n)
+
+    #print train_y
 
     #load and setup the network
     model = L.Classifier(nn.MyChain(), lossfun = mean_squared_error)
@@ -41,9 +43,19 @@ if __name__ == '__main__':
     start_time = time.time() #start time measurement
 
     #modify dataset structure
-    train = td.TupleDataset(train_x,train_y)
-    test = td.TupleDataset(test_x,test_y)
+    #train = td.TupleDataset(train_x,train_y)
+    #test = td.TupleDataset(test_x,test_y)
 
+    train = []
+    test = []
+
+    for i in range(train_n):
+        train.append([train_x[i],train_y[i]])
+
+    for i in range(test_n):
+        test.append([test_x[i],test_y[i]])
+
+    #print len(train)
     #setup iterator
     train_iter = chainer.iterators.SerialIterator(train,batchsize)
     test_iter = chainer.iterators.SerialIterator(test,batchsize,repeat=False, shuffle=False)
@@ -66,6 +78,10 @@ if __name__ == '__main__':
     #visualize results
     v.loss_visualizer()
     estimated_y = model.predictor(test_x).data
+    print estimated_y[0]
+    print estimated_y[0][0]
+    print estimated_y[0][1]
+
     v.test_result_visualizer(test_x,test_y,test_x,estimated_y)
-    # v.function_visualizer(model)
+    # # v.function_visualizer(model)
     plt.show()

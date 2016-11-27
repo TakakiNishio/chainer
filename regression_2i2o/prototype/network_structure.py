@@ -13,7 +13,7 @@ class MyChain(Chain):
             l1 = L.Linear(2,16),
             l2 = L.Linear(16,32),
             l3 = L.Linear(32,48),
-            l4 = L.Linear(48,1)
+            l4 = L.Linear(48,2)
         )
 
     def __call__(self, x): #calculate network output

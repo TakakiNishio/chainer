@@ -4,9 +4,11 @@ import random
 
 #define function
 def real_function(x1,x2):
-    z = -3*np.exp(-(((x1-2)**2)/3)-(((x2-2)**2)/3)) - 4*np.exp(-(((x1+2)**2)/4)-(((x2 +2)**2)/4))
-    #z = np.exp(-0.25 * np.sqrt(x1**2 + x2**2)) * np.cos(2 * np.sqrt(x1**2 + x2**2))
-    return z
+    y = []
+    y1 = -3*np.exp(-(((x1-2)**2)/3)-(((x2-2)**2)/3)) - 4*np.exp(-(((x1+2)**2)/4)-(((x2 +2)**2)/4))
+    y2 = np.exp(-0.25 * np.sqrt(x1**2 + x2**2)) * np.cos(2 * np.sqrt(x1**2 + x2**2))
+    y.append([y1,y2])
+    return y
 
 
 #generate dataset
@@ -35,6 +37,6 @@ def dataset_generator(n):
     y = np.array(y, dtype = np.float32)
 
     x = np.reshape(x,(len(x),2))
-    y = np.reshape(y,(len(y),1))
+    y = np.reshape(y,(len(y),2))
 
     return x,y

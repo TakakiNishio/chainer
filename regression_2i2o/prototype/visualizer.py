@@ -43,27 +43,43 @@ def test_result_visualizer(actual_x,actual_y,test_x,estimated_y):
 
     actual_x1=[]
     actual_x2=[]
+    actual_y1 = []
+    actual_y2 =[]
+
     test_x1 = []
     test_x2 = []
+    estimated_y1 = []
+    estimated_y2 =[]
 
     for i in range (len(actual_x)):
         actual_x1.append(actual_x[i][0])
         actual_x2.append(actual_x[i][1])
+        actual_y1.append(actual_y[i][0])
+        actual_y2.append(actual_y[i][1])
 
     for j in range (len(test_x)):
         test_x1.append(test_x[j][0])
         test_x2.append(test_x[j][1])
+        estimated_y1.append(estimated_y[i][0])
+        estimated_y2.append(estimated_y[i][1])
 
-    fig2 = plt.figure(2)
-    ax = Axes3D(fig2)
-    p1 = ax.scatter3D(actual_x1,actual_x2,actual_y,color=(1.0,0,0),marker='o',s=10,label='actual data')
-    p2 = ax.scatter3D(test_x1,test_x2,estimated_y,color=(0,0,1.0),marker='o',s=10,label='estimated data')
+    fig2 = plt.figure(figsize = plt.figaspect(0.5))
 
-    plt.title("regression for test dataset")
-    ax.legend()
-    ax.set_xlabel("x1")
-    ax.set_ylabel("x2")
-    ax.set_zlabel("y")
+    ax1 = fig2.add_subplot(1, 2, 1, projection='3d')
+    #p1_1 = ax1.scatter3D(actual_x1,actual_x2,actual_y1,color=(1.0,0,0),marker='o',s=10,label='actual data')
+    p1_2 = ax1.scatter3D(test_x1,test_x2,estimated_y1,color=(0,0,1.0),marker='o',s=10,label='estimated data')
+    ax1.legend()
+    ax1.set_xlabel("x1")
+    ax1.set_ylabel("x2")
+    ax1.set_zlabel("y")
+
+    ax2 = fig2.add_subplot(1, 2, 2, projection='3d')
+    #p2_1 = ax2.scatter3D(actual_x1,actual_x2,actual_y2,color=(1.0,0,0),marker='o',s=10,label='actual data')
+    p1_2 = ax2.scatter3D(test_x1,test_x2,estimated_y2,color=(0,0,1.0),marker='o',s=10,label='estimated data')
+    ax2.legend()
+    ax2.set_xlabel("x1")
+    ax2.set_ylabel("x2")
+    ax2.set_zlabel("y")
 
 
 #draw 3D graph
