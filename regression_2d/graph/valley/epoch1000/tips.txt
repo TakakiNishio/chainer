@@ -15,9 +15,9 @@ batchsize = 10
 LOSS result:
 
 　Lab PC with trainer
-　　train LOSS = 0.000205874 
-　　test LOSS = 0.000181521 
-  execution time = 1410.2238059 (23 min 30.2 sec)
+　　train LOSS = 0.000157213
+　　test LOSS =  9.40699e-05
+  execution time = 1500.06206584 (25 min)
 
 
 Network(for trainer):

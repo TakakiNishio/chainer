@@ -1,6 +1,7 @@
 #python library
 import time
 from matplotlib import pyplot as plt
+import numpy as np
 
 #chainer library
 import chainer
@@ -19,48 +20,35 @@ import get_dataset as d
 import network_structure as nn
 import visualizer as v
 
+
 #main
 if __name__ == '__main__':
 
-    #set parameters
-    train_n = 1000
+    #parameters
+    train_n = 4500
     test_n = 500
-    epoch_n = 50
+    epoch_n = 100
     batchsize = 10
 
     #get dataset
-    train_x, train_y = d.dataset_generator(train_n)
-    test_x, test_y = d.dataset_generator(test_n)
-
-    #print train_y
+    train = d.dataset_generator(train_n)
+    test = d.dataset_generator(test_n)
+    train_x,train_y,test_x,test_y = d.separator(train,test)
 
     #load and setup the network
-    model = L.Classifier(nn.MyChain(), lossfun = mean_squared_error)
+    model = L.Classifier(nn.MyChain1(), lossfun = mean_squared_error)
+    #model = L.Classifier(nn.MyChain3(), lossfun = mean_squared_error)
     model.compute_accuracy = False #for regression
     optimizer = optimizers.Adam()  #choose optimizer
     optimizer.setup(model)
 
     start_time = time.time() #start time measurement
 
-    #modify dataset structure
-    #train = td.TupleDataset(train_x,train_y)
-    #test = td.TupleDataset(test_x,test_y)
-
-    train = []
-    test = []
-
-    for i in range(train_n):
-        train.append([train_x[i],train_y[i]])
-
-    for i in range(test_n):
-        test.append([test_x[i],test_y[i]])
-
-    #print len(train)
     #setup iterator
     train_iter = chainer.iterators.SerialIterator(train,batchsize)
     test_iter = chainer.iterators.SerialIterator(test,batchsize,repeat=False, shuffle=False)
 
-    #trainer
+    #setup trainer and run the leaning method
     updater = training.StandardUpdater(train_iter, optimizer, device=-1)
     trainer = training.Trainer(updater, (epoch_n, 'epoch'), out="result")
     trainer.extend(extensions.Evaluator(test_iter, model, device=-1))
@@ -73,15 +61,15 @@ if __name__ == '__main__':
     execution_time = time.time() - start_time
     print "execution time : " + str(execution_time)
 
+    #save model and optimizer
     serializers.save_npz('my.model', model)
     serializers.save_npz('my.state', optimizer)
-    #visualize results
-    v.loss_visualizer()
-    estimated_y = model.predictor(test_x).data
-    print estimated_y[0]
-    print estimated_y[0][0]
-    print estimated_y[0][1]
 
-    v.test_result_visualizer(test_x,test_y,test_x,estimated_y)
-    # # v.function_visualizer(model)
+    #predict test output
+    estimated_y = model.predictor(test_x).data
+
+    #visualize result
+    v.loss_visualizer()
+    v.test_result_visualizer(test_x,test_y,estimated_y)
+    v.function_visualizer(model)
     plt.show()

@@ -1,0 +1,42 @@
+
+function:
+
+y1 = -3*np.exp(-(((x1-2)**2)/3)-(((x2-2)**2)/3)) 
+      - 4*np.exp(-(((x1+2)**2)/4)-(((x2 +2)**2)/4))                             
+
+y2 = np.exp(-0.25 * np.sqrt(x1**2 + x2**2)) 
+      * np.cos(2 * np.sqrt(x1**2 + x2**2))
+
+
+min_x1 = -5, max_x1 = 5
+min_x2 = -5, max_x2 = 5
+
+parameters:
+train_n = 4500
+test_n = 500
+epoch_n = 100
+batchsize = 10
+
+LOSS result:
+
+　Lab PC with trainer
+　　train LOSS = 0.0212301
+　　test LOSS = 0.019877 
+  execution time = 34.7624969482
+
+
+Network:
+class MyChain1(Chain):
+
+    def __init__(self):
+        super(MyChain2, self).__init__(
+            l1 = L.Linear(2,150),
+            l2 = L.Linear(150,2),
+        )
+
+    def __call__(self, x):
+        h = F.relu(self.l1(x))
+        h = self.l2(h)
+        return h
+
+

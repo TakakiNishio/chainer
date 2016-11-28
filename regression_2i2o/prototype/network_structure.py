@@ -7,18 +7,51 @@ import chainer.links as L
 
 
 #define NN class
-class MyChain(Chain):
+class MyChain1(Chain):
+
     def __init__(self):
-        super(MyChain, self).__init__(
-            l1 = L.Linear(2,16),
-            l2 = L.Linear(16,32),
-            l3 = L.Linear(32,48),
-            l4 = L.Linear(48,2)
+        super(MyChain1, self).__init__(
+            l1 = L.Linear(2,150),
+            l2 = L.Linear(150,2)
         )
 
-    def __call__(self, x): #calculate network output
-        h1 = F.leaky_relu(self.l1(x))
-        h2 = F.leaky_relu(self.l2(h1))
-        h3 = F.leaky_relu(self.l3(h2))
-        h4 = F.leaky_relu(self.l4(h3))
-        return h4
+    def __call__(self, x):
+        h = F.relu(self.l1(x))
+        h = self.l2(h)
+        return h
+
+
+#define NN class
+class MyChain2(Chain):
+
+    def __init__(self):
+        super(MyChain2, self).__init__(
+            l1 = L.Linear(2,10),
+            l2 = L.Linear(10,15),
+            l3 = L.Linear(15,2)
+        )
+
+    def __call__(self, x):
+        h = F.relu(self.l1(x))
+        h = F.relu(self.l2(h))
+        h = self.l3(h)
+        return h
+
+
+#define NN class
+class MyChain3(Chain):
+
+    def __init__(self):
+        super(MyChain3, self).__init__(
+            l1 = L.Linear(2,10),
+            l2 = L.Linear(10,15),
+            l3 = L.Linear(15,10),
+            l4 = L.Linear(10,2)
+        )
+
+    def __call__(self, x):
+        h = F.relu(self.l1(x))
+        h = F.relu(self.l2(h))
+        h = F.relu(self.l3(h))
+        h = self.l4(h)
+        return h
