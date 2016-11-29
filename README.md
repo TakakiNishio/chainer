@@ -47,7 +47,7 @@ loader.py : load model and draw regression result
 ```
 ## regression_2i2o
 #### projects
-prototype
+classification_class
 ```bash
 get_dataset.py : dataset generator  
 network_structure.py : chainer class  
@@ -58,4 +58,19 @@ loader.py : load model and draw regression result
 regression_class
 ```bash
 ```
-
+## MNIST
+#### projects
+mlp
+```bash
+network_structure.py : chainer class  
+visualizer.py : visualize result  
+learner.py : run learning cycle  
+loader.py : load model and draw classification result
+```
+cnn
+```bash
+network_structure.py : chainer class  
+visualizer.py : visualize result  
+learner.py : run learning cycle  
+loader.py : load model and draw classification result
+```
