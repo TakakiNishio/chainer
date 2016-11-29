@@ -1,7 +1,8 @@
-#!/usr/bin/env python
-from __future__ import print_function
+#python library
 import argparse
+import time
 
+#chainer libraty
 import chainer
 import chainer.functions as F
 import chainer.links as L
@@ -9,26 +10,14 @@ from chainer import training
 from chainer.training import extensions
 from chainer import serializers
 
-# Network definition
-class CNN(chainer.Chain):
-
-    def __init__(self, train= True):
-        super(CNN, self).__init__(
-            conv1=L.Convolution2D(1, 20, 5),
-            conv2=L.Convolution2D(20, 50, 5),
-            fc=L.Linear(800, 500),
-            out=L.Linear(500, 10),
-        )
-        self.train = train
-
-    def __call__(self, x):
-        h1 = F.max_pooling_2d(F.relu(self.conv1(x)),2,stride = 2)
-        h2 = F.max_pooling_2d(F.relu(self.conv2(h1)),2,stride = 2)
-        h3 = self.fc(F.dropout(h2))
-        return self.out(h3)
+#python scripts
+import network_structure as nn
+import visualizer as v
 
 
-def main():
+#main
+if __name__ == '__main__':
+
     parser = argparse.ArgumentParser(description='Chainer example: MNIST')
     parser.add_argument('--batchsize', '-b', type=int, default=100,
                         help='Number of images in each mini batch')
@@ -38,22 +27,19 @@ def main():
                         help='GPU ID (negative value indicates CPU)')
     parser.add_argument('--out', '-o', default='result',
                         help='Directory to output the result')
-    parser.add_argument('--resume', '-r', default='',
-                        help='Resume the training from snapshot')
     parser.add_argument('--unit', '-u', type=int, default=1000,
                         help='Number of units')
     args = parser.parse_args()
 
-    print('GPU: {}'.format(args.gpu))
-    #print('# unit: {}'.format(args.unit))
-    print('# Minibatch-size: {}'.format(args.batchsize))
-    print('# epoch: {}'.format(args.epoch))
-    print('')
+    print 'GPU: ' + format(args.gpu)
+    print '# Minibatch-size: ' + format(args.batchsize)
+    print '# epoch: ' + format(args.epoch)
+    print ''
 
     # Set up a neural network to train
     # Classifier reports softmax cross entropy loss and accuracy at every
     # iteration, which will be used by the PrintReport extension below.
-    model = L.Classifier(CNN())
+    model = L.Classifier(nn.CNN())
     if args.gpu >= 0:
         chainer.cuda.get_device(args.gpu).use()  # Make a specified GPU current
         model.to_gpu()  # Copy the model to the GPU
@@ -67,8 +53,7 @@ def main():
     train, test = chainer.datasets.get_mnist(ndim=3)
 
     train_iter = chainer.iterators.SerialIterator(train, args.batchsize)
-    test_iter = chainer.iterators.SerialIterator(test, args.batchsize,
-                                                 repeat=False, shuffle=False)
+    test_iter = chainer.iterators.SerialIterator(test, args.batchsize,repeat=False, shuffle=False)
 
     # Set up a trainer
     updater = training.StandardUpdater(train_iter, optimizer, device=args.gpu)
@@ -82,7 +67,7 @@ def main():
     trainer.extend(extensions.dump_graph('main/loss'))
 
     # Take a snapshot at each epoch
-    trainer.extend(extensions.snapshot())
+    #trainer.extend(extensions.snapshot())
 
     # Write a log of evaluation statistics for each epoch
     trainer.extend(extensions.LogReport())
@@ -99,18 +84,17 @@ def main():
     # Print a progress bar to stdout
     trainer.extend(extensions.ProgressBar())
 
-    if args.resume:
-        # Resume from a snapshot
-        chainer.serializers.load_npz(args.resume, trainer)
+    start_time = time.time() #start time measurement
 
     # Run the training
     trainer.run()
 
-    print('save the model')
-    serializers.save_npz('cnnm.model', model)
-    print('save the optimizer')
-    serializers.save_npz('cnnm.state', optimizer)
+    execution_time = time.time() - start_time
+    print "execution time : " + str(execution_time)
 
+    print('saved the model')
+    serializers.save_npz('cnn.model', model)
+    print('saved the optimizer')
+    serializers.save_npz('cnn.state', optimizer)
 
-if __name__ == '__main__':
-    main()
+    v.loss_visualizer()

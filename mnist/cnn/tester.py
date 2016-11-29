@@ -13,8 +13,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from numpy.random import *
 
-import pylab
-
 
 # Network definition
 class CNN(chainer.Chain):
