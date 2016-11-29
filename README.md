@@ -62,14 +62,14 @@ regression_class
 #### projects
 mlp
 ```bash
-network_structure.py : chainer class  
+network_structure.py : chainer class (multi layer perceptron)  
 visualizer.py : visualize result  
 learner.py : run learning cycle  
 loader.py : load model and draw classification result
 ```
 cnn
 ```bash
-network_structure.py : chainer class  
+network_structure.py : chainer class (CNN)  
 visualizer.py : visualize result  
 learner.py : run learning cycle  
 loader.py : load model and draw classification result
