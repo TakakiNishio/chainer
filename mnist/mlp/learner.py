@@ -39,7 +39,8 @@ if __name__ == '__main__':
     # Set up a neural network to train
     # Classifier reports softmax cross entropy loss and accuracy at every
     # iteration, which will be used by the PrintReport extension below.
-    model = L.Classifier(nn.MLP())
+    #model = L.Classifier(nn.MLP())
+    model = nn.MLP_classification()
 
     if args.gpu >= 0:
         chainer.cuda.get_device(args.gpu).use()  # Make a specified GPU current
@@ -53,6 +54,7 @@ if __name__ == '__main__':
     # Load the MNIST dataset
     train, test = chainer.datasets.get_mnist(ndim=3)
 
+    print type(train[0][0])
     train_iter = chainer.iterators.SerialIterator(train, args.batchsize)
     test_iter = chainer.iterators.SerialIterator(test, args.batchsize,repeat=False, shuffle=False)
 
